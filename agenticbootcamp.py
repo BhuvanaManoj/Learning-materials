@@ -6,7 +6,7 @@ import json
 # ============================
 # Setup: Gemini API Key
 # ============================
-GEMINI_API_KEY = "AIzaSyAYbFP5MMt_qm5sgtrzlysXRWxxqZ6uKqo"  # Replace with your inbuilt API key
+GEMINI_API_KEY = "Give your API Key"  # Replace with your inbuilt API key
 genai.configure(api_key=GEMINI_API_KEY)
 
 # Load Gemini model
