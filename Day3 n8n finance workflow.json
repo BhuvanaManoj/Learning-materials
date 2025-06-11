@@ -1,0 +1,184 @@
+{
+  "name": "Finance over due",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        60
+      ],
+      "id": "249ce95d-7985-4110-a299-0342307224b6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1B7uHUaDbr91NtCevnEqKoGSAPh46EaFDk6RojwaXqrw",
+          "mode": "list",
+          "cachedResultName": "Cheque dues",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1B7uHUaDbr91NtCevnEqKoGSAPh46EaFDk6RojwaXqrw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1B7uHUaDbr91NtCevnEqKoGSAPh46EaFDk6RojwaXqrw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        160,
+        60
+      ],
+      "id": "4c7a5749-798a-4f9a-9063-d17b743a835c",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vlwDCyi3BPEv6KxY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Reminder mail to pay the dues",
+        "emailType": "text",
+        "message": "=Hi {{ $json.Customer_Name }}\n\nThe deadline for your dues is {{ $json.Due_Date }} \n\nThe pending dues amount is {{ $json.Amount }}\n\nYou are asked to pay the dues within one week time.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        620,
+        0
+      ],
+      "id": "014d5579-3d0f-4467-a049-31bbe0e00c33",
+      "name": "Gmail",
+      "webhookId": "2153fa65-0632-43f7-8c04-00b152ca7f75",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "esCBjCJwS1NtAE2Z",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "aa321e3e-b644-450a-b573-ee4b7a82ef9b",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Unpaid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        380,
+        60
+      ],
+      "id": "527db383-e718-446b-834b-e68eccb7995b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Update on the payment dues",
+        "emailType": "text",
+        "message": "=Hi  {{ $json.Customer_Name }}\n\nThank you for paying the dues on time.\n\nCongratulations!!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        600,
+        160
+      ],
+      "id": "4a36bdb6-e547-49b3-9795-6dbec815e4c4",
+      "name": "Gmail1",
+      "webhookId": "3a6477dc-60f5-4e5d-84e6-dca11c802023",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "esCBjCJwS1NtAE2Z",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ddea33ad-6a26-4ca0-897d-d199bb2ed2a5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a4bf6f270f1268d3b2ec9ac153b6a42a610029914cb1fcc32bbe26f3655266b"
+  },
+  "id": "seYmOBIxculBmuwl",
+  "tags": []
+}
